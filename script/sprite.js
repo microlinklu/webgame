@@ -5,8 +5,10 @@ function Sprite(img,spW,spH,sequence){
   this.sequence=sequence;//帧序列数组
     var x,y;
     var spX,spY;
+    var w,h;
     var frameIndex;//动画帧索引
-  this.draw=function(ctx){//绘制精灵
+
+  this.draw=function(){//绘制精灵
       if(spW==undefined){
           ctx.drawImage(img,x,y);
       }else{
@@ -15,6 +17,19 @@ function Sprite(img,spW,spH,sequence){
           ctx.drawImage(img,spX,spY,spW,spH,x,y,spW,spH);
       }
   }
+    this.getSpriteWidth=function(){
+        w=spW;
+        if(w==undefined)return w=img.width;
+            else return w;
+        if(w<=0)alert('图像加载错误')
+    }
+
+    this.getSpriteHeight=function(){
+        h=spH;
+        if(h==undefined)return h=img.height;
+        else return h;
+        if(h<=0)alert('图像加载错误')
+    }
     this.next=function(){//计算动画帧，当达到最后一帧时回到第一帧继续播放
          frameIndex++;
         if(frameIndex>sequence.length)frameIndex=0;
@@ -37,12 +52,15 @@ function Sprite(img,spW,spH,sequence){
         x=x1;
         y=y1;
     }
+    this.getX=function(){
+        return x;
+
+    }
+    this.getY=function(){
+        return y;
+    }
     this.collidswith=function(obj){//碰撞
 
     }
 
 }
-var player=new Sprite(play,34,56,ss);
-player.move(3,4);
-player.next();
-player.draw();

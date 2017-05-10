@@ -3,17 +3,23 @@
  */
 //游戏入口脚本
 
-   var ctx;
+   var ctx;//context
    var bt=[];
+
+var gameState=MENU;//游戏状态0--菜单，1--游戏运行
    var btimg=['img/btnew1.png','img/btnew2.png','img/btexit1.png','img/btexit2.png'];
-   $(function(){
-    var can=document.getElementById('MyGame');
-       ctx=can.getContext('2d');
-       drawCoverImage();
-       for(var i=0;i<2;i++) {
-           bt[i] = new Button(btimg[i*2],btimg[i*2+1], 0, i*40);
-           bt[i].draw();
-          }
+   var playX,playY;
+
+$(function() {
+           var can= document.getElementById('MyGame');
+           ctx = can.getContext('2d');
+           playX=can.width/2+27,playY=can.height-60
+               drawCoverImage();
+               for (var i = 0; i < 2; i++) {
+                   bt[i] = new Button(btimg[i * 2], btimg[i * 2 + 1], 0, i * 40);
+                   bt[i].draw();
+               }
+
        }
    )
   onmousedown=function(e) {
@@ -22,21 +28,56 @@
       for (var i = 0; i < 2; i++) {
           var w = bt[i].getWidth();
           var h = bt[i].getHeight();
-          if (x > bt[i].x && x < bt[i].x + w && y > bt[i].y && y < bt[i].y + h) {
-              bt[i].drawAct();
-          } else {
-              bt[i].drawDef();
+          switch(gameState){
+              case MENU:
+              if (x > bt[i].x && x < bt[i].x + w && y > bt[i].y && y < bt[i].y + h) {
+                  bt[i].drawAct();
+                  menu(i)
+
+              } else {
+                  bt[i].drawDef();
+              }
+                  break;
+              case RUN:
+                 break;
+
           }
+
       }
   }
-
+   onmousemove=function(e){
+       var x= e.clientX;
+       var y= e.clientY;
+       switch(gameState) {
+           case RUN:
+               playX = x - 27;
+               playY = y - 27;
+               if (playY > 600)playY = 600;
+               if (playY < 0)playY = 0;
+               if (playX > 800)playX = 800;
+               if (playX < 0)playX = 0;
+               break;
+       }
+   }
    onmouseout=function(){
-       for(var i=0;i<2;i++)
-       bt[i].drawDef();
+       switch(gameState){
+           case MENU:
+               for(var i=0;i<2;i++)
+                   bt[i].drawDef();
+               break;
+
+       }
+
    }
    onmouseup=function(){
-       for(var i=0;i<2;i++)
-       bt[i].drawDef();
+       switch(gameState){
+           case MENU:
+               for(var i=0;i<2;i++)
+                   bt[i].drawDef();
+               break;
+
+       }
+
    }
 function Rect(x,y,w,h,x1,y1){
     this.x=x;
@@ -87,12 +128,14 @@ function Button(url1,url2,x,y){
 
 }
 //new Button (canvas,button[0],0)
-function menu(canvas){
-   var newgame=new Rect();
-
-    if(newgame.containt()){
-        //进入游戏界面
+function menu(btIndex){
+    switch(btIndex){
+        case 0:
+            gameState=RUN;
+            loadBack();
+            break;
     }
+
 }
 function draw(img,x,y,w,h){
    // canvas.drawImage(cover,0,0,cover.width,cover.height,0,0,800,600);
